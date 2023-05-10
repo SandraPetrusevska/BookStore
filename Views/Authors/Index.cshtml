@@ -1,0 +1,74 @@
+﻿@model BookStore.ViewModels.AuthorViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+@if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+{
+    <p>
+        <a asp-action="Create" class ="btn btn-primary">Create New</a>
+    </p>
+}
+<form asp-controller="Authors" asp-action="Index" method="get">
+    <p>
+        First Name: <input type="text" asp-for="SearchFirstName" />
+        Last Name: <input type="text" asp-for="SearchLastName" />
+        Nationality: <input type="text" asp-for="SearchNationality" />
+        <input type="submit" value="Filter" />
+    </p>
+</form>
+
+@{
+    var authors = Model.Authors.ToList();
+    for (int i = 0; i < authors.Count; i += 2)
+    {
+        var author1 = authors[i];
+        var author2 = (i + 1 < authors.Count) ? authors[i + 1] : null;
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">@Html.DisplayFor(modelItem => author1.FullName)</h5>
+                        <p class="card-text">Date of birth: @Html.DisplayFor(modelItem => author1.BirthDate)</p>
+                        <p class="card-text">Nationality: @Html.DisplayFor(modelItem => author1.Nationality)</p>
+                        <p class="card-text">Gender: @Html.DisplayFor(modelItem => author1.Gender)</p>
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@author1.Id" class="btn btn-success">Edit</a>
+                        }
+                        <a asp-action="Details" asp-route-id="@author1.Id" class="btn btn-primary">Details</a>
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Delete" asp-route-id="@author1.Id" class="btn btn-danger">Delete</a>
+                        }
+                    </div>
+                </div>
+            </div>
+            @if (author2 != null)
+            {
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">@Html.DisplayFor(modelItem => author2.FullName)</h5>
+                            <p class="card-text">Date of birth: @Html.DisplayFor(modelItem => author2.BirthDate)</p>
+                            <p class="card-text">Nationality: @Html.DisplayFor(modelItem => author2.Nationality)</p>
+                            <p class="card-text">Gender: @Html.DisplayFor(modelItem => author2.Gender)</p>
+                            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@author2.Id" class="btn btn-success">Edit</a>
+                            }
+                            <a asp-action="Details" asp-route-id="@author2.Id" class="btn btn-primary">Details</a>
+                            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                            {
+                                <a asp-action="Delete" asp-route-id="@author2.Id" class="btn btn-danger">Delete</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <br>
+        <br>
+    }
+}
